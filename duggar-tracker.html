@@ -208,8 +208,9 @@
     const SERVER = 'https://api.tinygreenfruit.com';
 
     async function fetchEpisodeInfo() {
+      let episodeTitle = '';
+
       try {
-        // Fetch RSS for title and description
         const res = await fetch(`${SERVER}/rss`);
         const text = await res.text();
         const parser = new DOMParser();
@@ -218,11 +219,11 @@
 
         const ep = items[CURRENT_EP - 1];
         if (ep) {
-          const title = ep.querySelector('title')?.textContent?.trim() || '';
+          episodeTitle = ep.querySelector('title')?.textContent?.trim() || '';
           const rawDesc = (ep.querySelector('description')?.textContent || '')
             .replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').trim();
           document.getElementById('epInfo').innerHTML = `
-            <span class="ep-title">${title}</span>
+            <span class="ep-title">${episodeTitle}</span>
             <span class="ep-desc">${rawDesc}</span>
           `;
         }
@@ -230,25 +231,26 @@
         document.getElementById('epInfo').innerHTML = '';
       }
 
-      try {
-        // Fetch specific Spotify episode
-        const spotifyRes = await fetch(`${SERVER}/spotify/episode?episode=${CURRENT_EP}`);
-        const spotifyData = await spotifyRes.json();
-        if (spotifyData.id) {
-          document.getElementById('spotifyEmbed').innerHTML = `
-            <iframe
-              src="https://open.spotify.com/embed/episode/${spotifyData.id}?utm_source=generator&theme=0"
-              width="100%"
-              height="152"
-              frameborder="0"
-              allowfullscreen=""
-              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-              loading="lazy">
-            </iframe>
-          `;
+      if (episodeTitle) {
+        try {
+          const spotifyRes = await fetch(`${SERVER}/spotify/episode?title=${encodeURIComponent(episodeTitle)}`);
+          const spotifyData = await spotifyRes.json();
+          if (spotifyData.id) {
+            document.getElementById('spotifyEmbed').innerHTML = `
+              <iframe
+                src="https://open.spotify.com/embed/episode/${spotifyData.id}?utm_source=generator&theme=0"
+                width="100%"
+                height="152"
+                frameborder="0"
+                allowfullscreen=""
+                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                loading="lazy">
+              </iframe>
+            `;
+          }
+        } catch(e) {
+          // fall back to show embed
         }
-      } catch(e) {
-        // fall back to show embed
       }
     }
 
