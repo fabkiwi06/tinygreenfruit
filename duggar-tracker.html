@@ -39,7 +39,7 @@
     }
 
     header {
-      margin-bottom: 2.5rem;
+      margin-bottom: 1rem;
     }
 
     .eyebrow {
@@ -104,13 +104,13 @@
     }
 
     .progress-section {
-      margin-bottom: 2.5rem;
+      margin-bottom: 1.25rem;
     }
 
     .progress-meta {
       display: flex;
-      justify-content: space-between;
-      align-items: baseline;
+      flex-direction: column;
+      gap: 0.25rem;
       margin-bottom: 0.75rem;
     }
 
@@ -145,7 +145,7 @@
     }
 
     .window-section {
-      margin-bottom: 2.5rem;
+      margin-bottom: 1.5rem;
     }
 
     .window-label {
@@ -154,7 +154,7 @@
       letter-spacing: 0.15em;
       text-transform: uppercase;
       color: var(--muted);
-      margin-bottom: 1rem;
+      margin-bottom: 0.65rem;
     }
 
     .ep-window {
@@ -211,7 +211,7 @@
       display: flex;
       gap: 1.25rem;
       align-items: center;
-      margin-bottom: 2.5rem;
+      margin-bottom: 1.5rem;
     }
 
     .mark-btn {
@@ -433,15 +433,15 @@
 
     // RSS feed
     const RSS_URL = 'https://anchor.fm/s/8dd2f3b0/podcast/rss';
-    const PROXY = `https://api.allorigins.win/get?url=${encodeURIComponent(RSS_URL)}`;
+    const PROXY = `https://corsproxy.io/?${encodeURIComponent(RSS_URL)}`;
     let episodes = [];
 
     async function fetchEpisodes() {
       try {
         const res = await fetch(PROXY);
-        const data = await res.json();
+        const text = await res.text();
         const parser = new DOMParser();
-        const xml = parser.parseFromString(data.contents, 'text/xml');
+        const xml = parser.parseFromString(text, 'text/xml');
         const items = Array.from(xml.querySelectorAll('item')).reverse();
         episodes = items.map(item => ({
           title: item.querySelector('title')?.textContent || '',
