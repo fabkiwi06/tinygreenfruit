@@ -209,6 +209,7 @@
 
     async function fetchEpisodeInfo() {
       try {
+        // Fetch RSS for title and description
         const res = await fetch(`${SERVER}/rss`);
         const text = await res.text();
         const parser = new DOMParser();
@@ -216,33 +217,27 @@
         const items = Array.from(xml.querySelectorAll('item')).reverse();
 
         const ep = items[CURRENT_EP - 1];
-        if (!ep) return;
+        if (ep) {
+          const title = ep.querySelector('title')?.textContent?.trim() || '';
+          const rawDesc = (ep.querySelector('description')?.textContent || '')
+            .replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').trim();
+          document.getElementById('epInfo').innerHTML = `
+            <span class="ep-title">${title}</span>
+            <span class="ep-desc">${rawDesc}</span>
+          `;
+        }
+      } catch(e) {
+        document.getElementById('epInfo').innerHTML = '';
+      }
 
-        const title = ep.querySelector('title')?.textContent?.trim() || '';
-        const rawDesc = (ep.querySelector('description')?.textContent || '')
-          .replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').trim();
-
-        document.getElementById('epInfo').innerHTML = `
-          <span class="ep-title">${title}</span>
-          <span class="ep-desc">${rawDesc}</span>
-        `;
-
-        // Try to find Spotify episode URL in the feed
-        const spotifyUri = ep.querySelector('id')?.textContent ||
-          ep.getElementsByTagNameNS('*', 'id')[0]?.textContent || '';
-
-        const linkEl = ep.querySelector('link');
-        const episodeUrl = linkEl?.textContent || linkEl?.nextSibling?.nodeValue || '';
-
-        // Look for spotify URL in any element
-        const allText = ep.innerHTML || '';
-        const spotifyMatch = allText.match(/spotify\.com\/episode\/([a-zA-Z0-9]+)/);
-
-        if (spotifyMatch) {
-          const episodeId = spotifyMatch[1];
+      try {
+        // Fetch specific Spotify episode
+        const spotifyRes = await fetch(`${SERVER}/spotify/episode?episode=${CURRENT_EP}`);
+        const spotifyData = await spotifyRes.json();
+        if (spotifyData.id) {
           document.getElementById('spotifyEmbed').innerHTML = `
             <iframe
-              src="https://open.spotify.com/embed/episode/${episodeId}?utm_source=generator&theme=0"
+              src="https://open.spotify.com/embed/episode/${spotifyData.id}?utm_source=generator&theme=0"
               width="100%"
               height="152"
               frameborder="0"
@@ -252,9 +247,8 @@
             </iframe>
           `;
         }
-
       } catch(e) {
-        document.getElementById('epInfo').innerHTML = '';
+        // fall back to show embed
       }
     }
 
