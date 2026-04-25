@@ -134,6 +134,67 @@
       text-transform: uppercase;
     }
 
+    .nav-dropdown {
+      position: relative;
+    }
+
+    .nav-toggle {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: color 0.2s ease;
+    }
+
+    .nav-toggle:hover {
+      color: var(--green);
+    }
+
+    .nav-toggle .arrow {
+      font-size: 0.5rem;
+      transition: transform 0.2s ease;
+      display: inline-block;
+    }
+
+    .nav-toggle.open .arrow {
+      transform: rotate(180deg);
+    }
+
+    .nav-menu {
+      display: none;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+      padding-left: 0.5rem;
+      border-left: 1px solid var(--green-light);
+    }
+
+    .nav-menu.open {
+      display: flex;
+    }
+
+    .nav-menu a {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .nav-menu a:hover {
+      color: var(--green);
+    }
+
     .divider {
       width: 40px;
       height: 1px;
@@ -147,6 +208,16 @@
     <div class="kiwi-group">
       <div class="kiwi">🥝</div>
       <div class="mark">tiny green fruit</div>
+    </div>
+
+    <div class="nav-dropdown">
+      <button class="nav-toggle" id="navToggle">
+        projects <span class="arrow">▼</span>
+      </button>
+      <div class="nav-menu" id="navMenu">
+        <a href="duggar-tracker.html">Digging Up the Duggars — Episode Tracker</a>
+        <a href="horoscope.html">The Stars Align (All Too Well) — Taylor Swift Horoscopes</a>
+      </div>
     </div>
 
     <div class="divider"></div>
@@ -175,5 +246,11 @@
     </div>
 
   </div>
+  <script>
+    document.getElementById('navToggle').addEventListener('click', function() {
+      this.classList.toggle('open');
+      document.getElementById('navMenu').classList.toggle('open');
+    });
+  </script>
 </body>
 </html>
