@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>what should we listen to — tinygreenfruit</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Courier+Prime&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: 'Cormorant Garamond', serif;
+      min-height: 100vh;
+      padding: 3rem 2rem 5rem;
+    }
+
+    header {
+      margin-bottom: 4rem;
+      animation: fadeIn 0.8s ease both;
+    }
+
+    header a {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      text-transform: lowercase;
+    }
+
+    header a:hover { color: var(--green); }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.1;
+      margin-top: 1.5rem;
+      color: var(--ink);
+    }
+
+    .subtitle {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-top: 0.6rem;
+    }
+
+    /* ── main card area ── */
+    .stage {
+      max-width: 540px;
+      margin-top: 3rem;
+      animation: fadeIn 1s ease 0.2s both;
+    }
+
+    /* idle state */
+    .idle-prompt {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .pick-btn {
+      display: inline-block;
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--cream);
+      background: var(--green);
+      border: none;
+      padding: 0.9rem 2.2rem;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.15s ease;
+      align-self: flex-start;
+    }
+
+    .pick-btn:hover {
+      background: var(--green-light);
+      transform: translateY(-1px);
+    }
+
+    .pick-btn:disabled {
+      background: var(--muted);
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* record card */
+    .record-card {
+      display: none;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .record-card.visible {
+      display: flex;
+      animation: fadeIn 0.6s ease both;
+    }
+
+    .cover-wrap {
+      position: relative;
+      width: 100%;
+      max-width: 380px;
+      aspect-ratio: 1;
+      background: #d8d4c8;
+      overflow: hidden;
+    }
+
+    .cover-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: opacity 0.4s ease;
+    }
+
+    .cover-wrap img.loading {
+      opacity: 0;
+    }
+
+    .cover-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cover-placeholder svg {
+      width: 60px;
+      height: 60px;
+      opacity: 0.25;
+    }
+
+    .record-meta {
+      margin-top: 1.6rem;
+      padding-bottom: 1.6rem;
+      border-bottom: 1px solid rgba(26,26,24,0.12);
+    }
+
+    .record-artist {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .record-title {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 1.15;
+      color: var(--ink);
+    }
+
+    .record-year {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.68rem;
+      color: var(--muted);
+      margin-top: 0.5rem;
+      letter-spacing: 0.06em;
+    }
+
+    /* action buttons */
+    .actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.8rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-listened {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--cream);
+      background: var(--green);
+      border: none;
+      padding: 0.85rem 1.8rem;
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.15s ease;
+    }
+
+    .btn-listened:hover {
+      background: var(--green-light);
+      transform: translateY(-1px);
+    }
+
+    .btn-skip {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: transparent;
+      border: 1px solid rgba(138,138,122,0.4);
+      padding: 0.85rem 1.8rem;
+      cursor: pointer;
+      transition: color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+    }
+
+    .btn-skip:hover {
+      color: var(--ink);
+      border-color: var(--ink);
+      transform: translateY(-1px);
+    }
+
+    /* cycle complete banner */
+    .cycle-banner {
+      display: none;
+      border: 1px solid rgba(61,90,62,0.3);
+      padding: 1.6rem;
+      margin-top: 2rem;
+      max-width: 460px;
+    }
+
+    .cycle-banner.visible {
+      display: block;
+      animation: fadeIn 0.6s ease both;
+    }
+
+    .cycle-banner p {
+      font-size: 1.1rem;
+      font-style: italic;
+      font-weight: 300;
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    .cycle-banner .cycle-label {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.65rem;
+      color: var(--green);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+
+    /* progress */
+    .progress-line {
+      margin-top: 3rem;
+      max-width: 380px;
+      animation: fadeIn 1s ease 0.4s both;
+    }
+
+    .progress-label {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 2px;
+      background: rgba(138,138,122,0.25);
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--green);
+      transition: width 0.6s ease;
+    }
+
+    /* toast */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 2rem;
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      color: var(--cream);
+      background: var(--ink);
+      padding: 0.7rem 1.2rem;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 2rem 1.25rem 4rem; }
+      .cover-wrap { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="index.html">← tinygreenfruit</a>
+    <h1>what should we<br>listen to tonight?</h1>
+    <p class="subtitle">the collection, shuffled with memory</p>
+  </header>
+
+  <main>
+    <div class="stage">
+
+      <!-- idle -->
+      <div class="idle-prompt" id="idleState">
+        <button class="pick-btn" id="pickBtn" onclick="pickRecord()">pick a record</button>
+      </div>
+
+      <!-- record card -->
+      <div class="record-card" id="recordCard">
+        <div class="cover-wrap" id="coverWrap">
+          <div class="cover-placeholder" id="coverPlaceholder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+              <circle cx="12" cy="12" r="10"/>
+              <circle cx="12" cy="12" r="3"/>
+              <line x1="12" y1="2" x2="12" y2="9"/>
+              <line x1="12" y1="15" x2="12" y2="22"/>
+              <line x1="2" y1="12" x2="9" y2="12"/>
+              <line x1="15" y1="12" x2="22" y2="12"/>
+            </svg>
+          </div>
+          <img id="coverImg" class="loading" src="" alt="" />
+        </div>
+
+        <div class="record-meta">
+          <div class="record-artist" id="recordArtist"></div>
+          <div class="record-title" id="recordTitle"></div>
+          <div class="record-year" id="recordYear"></div>
+        </div>
+
+        <div class="actions">
+          <button class="btn-listened" onclick="logListened()">✓ listened to this</button>
+          <button class="btn-skip" onclick="skipRecord()">skip for tonight</button>
+        </div>
+      </div>
+
+      <!-- cycle complete -->
+      <div class="cycle-banner" id="cycleBanner">
+        <div class="cycle-label">cycle complete</div>
+        <p>You've listened to everything at least once. Starting a new cycle.</p>
+        <button class="pick-btn" style="margin-top:1.4rem" onclick="resetCycle()">start fresh</button>
+      </div>
+
+    </div>
+
+    <!-- progress -->
+    <div class="progress-line" id="progressLine" style="display:none">
+      <div class="progress-label">
+        <span>this cycle</span>
+        <span id="progressCount">0 / 0</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill" style="width:0%"></div>
+      </div>
+    </div>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const API = 'https://api.tinygreenfruit.com';
+
+    let currentRecord = null;
+    let skippedThisSession = new Set();
+    let totalRecords = 0;
+    let listenedCount = 0;
+
+    async function pickRecord() {
+      const btn = document.getElementById('pickBtn');
+      btn.disabled = true;
+      btn.textContent = 'finding a record…';
+
+      try {
+        const params = new URLSearchParams();
+        skippedThisSession.forEach(id => params.append('skip', id));
+
+        const res = await fetch(`${API}/records/pick?${params}`);
+        const data = await res.json();
+
+        if (data.cycle_complete) {
+          showCycleBanner();
+          return;
+        }
+
+        currentRecord = data.record;
+        totalRecords = data.total;
+        listenedCount = data.listened_count;
+
+        showRecord(currentRecord);
+        updateProgress();
+      } catch (e) {
+        showToast('something went wrong. try again.');
+        btn.disabled = false;
+        btn.textContent = 'pick a record';
+      }
+    }
+
+    function showRecord(record) {
+      document.getElementById('recordArtist').textContent = record.artist;
+      document.getElementById('recordTitle').textContent = record.album;
+      document.getElementById('recordYear').textContent = record.year || '';
+
+      const img = document.getElementById('coverImg');
+      img.classList.add('loading');
+      img.src = '';
+
+      if (record.cover_url) {
+        img.onload = () => img.classList.remove('loading');
+        img.onerror = () => { img.src = ''; };
+        img.src = record.cover_url;
+        img.alt = `${record.album} by ${record.artist}`;
+      }
+
+      document.getElementById('idleState').style.display = 'none';
+      document.getElementById('cycleBanner').classList.remove('visible');
+      document.getElementById('recordCard').classList.add('visible');
+      document.getElementById('progressLine').style.display = 'block';
+    }
+
+    async function logListened() {
+      if (!currentRecord) return;
+
+      try {
+        await fetch(`${API}/records/listened`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id: currentRecord.id })
+        });
+
+        listenedCount++;
+        updateProgress();
+        showToast('logged. nice one.');
+        currentRecord = null;
+
+        // reset card, show pick button again
+        document.getElementById('recordCard').classList.remove('visible');
+        const btn = document.getElementById('pickBtn');
+        document.getElementById('idleState').style.display = 'flex';
+        btn.disabled = false;
+        btn.textContent = 'pick another';
+
+      } catch (e) {
+        showToast('couldn't log that. try again.');
+      }
+    }
+
+    function skipRecord() {
+      if (!currentRecord) return;
+      skippedThisSession.add(currentRecord.id);
+      currentRecord = null;
+
+      document.getElementById('recordCard').classList.remove('visible');
+      const btn = document.getElementById('pickBtn');
+      document.getElementById('idleState').style.display = 'flex';
+      btn.disabled = false;
+      btn.textContent = 'pick another';
+    }
+
+    function showCycleBanner() {
+      document.getElementById('idleState').style.display = 'none';
+      document.getElementById('recordCard').classList.remove('visible');
+      document.getElementById('cycleBanner').classList.add('visible');
+    }
+
+    async function resetCycle() {
+      try {
+        await fetch(`${API}/records/reset`, { method: 'POST' });
+        skippedThisSession.clear();
+        listenedCount = 0;
+        document.getElementById('cycleBanner').classList.remove('visible');
+        document.getElementById('idleState').style.display = 'flex';
+        const btn = document.getElementById('pickBtn');
+        btn.disabled = false;
+        btn.textContent = 'pick a record';
+        updateProgress();
+      } catch (e) {
+        showToast('reset failed. try again.');
+      }
+    }
+
+    function updateProgress() {
+      if (totalRecords === 0) return;
+      const pct = Math.round((listenedCount / totalRecords) * 100);
+      document.getElementById('progressCount').textContent = `${listenedCount} / ${totalRecords}`;
+      document.getElementById('progressFill').style.width = `${pct}%`;
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2800);
+    }
+  </script>
+
+</body>
+</html>
