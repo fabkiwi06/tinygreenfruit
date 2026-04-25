@@ -421,7 +421,7 @@
 
     // RSS
     const SERVER = 'https://api.tinygreenfruit.com';
-    let episodes = [];
+    let episodes = {};
 
     async function fetchEpisodes() {
       try {
@@ -430,11 +430,17 @@
         const parser = new DOMParser();
         const xml = parser.parseFromString(text, 'text/xml');
         const items = Array.from(xml.querySelectorAll('item')).reverse();
-        episodes = items.map(item => ({
-          title: item.querySelector('title')?.textContent?.trim() || '',
-          desc: (item.querySelector('description')?.textContent || '')
-            .replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').trim()
-        }));
+        episodes = {};
+        items.forEach(item => {
+          const title = item.querySelector('title')?.textContent?.trim() || '';
+          const match = title.match(/Episode\s+(\d+)/i);
+          if (match) {
+            const num = parseInt(match[1]);
+            const rawDesc = (item.querySelector('description')?.textContent || '')
+              .replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').trim();
+            episodes[num] = { title, desc: rawDesc };
+          }
+        });
         updateEpInfo();
       } catch(e) {
         document.getElementById('epInfo').innerHTML = '';
@@ -443,7 +449,7 @@
 
     function updateEpInfo() {
       const current = getCurrentEp();
-      const ep = episodes[current - 1];
+      const ep = episodes[current];
       const infoEl = document.getElementById('epInfo');
       if (!ep || !infoEl) return;
       infoEl.innerHTML = `
