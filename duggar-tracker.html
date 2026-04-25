@@ -66,43 +66,6 @@
       margin: 2rem 0;
     }
 
-    .ep-info {
-      margin-top: 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-    }
-
-    .ep-title {
-      font-family: 'Cormorant Garamond', Georgia, serif;
-      font-size: 1rem;
-      font-weight: 400;
-      font-style: italic;
-      color: var(--ink);
-      line-height: 1.4;
-    }
-
-    .ep-desc {
-      font-family: 'Courier Prime', monospace;
-      font-size: 0.6rem;
-      letter-spacing: 0.05em;
-      color: var(--muted);
-      line-height: 1.6;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .ep-loading {
-      font-family: 'Courier Prime', monospace;
-      font-size: 0.6rem;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--muted);
-      opacity: 0.5;
-    }
-
     .progress-section {
       margin-bottom: 1.25rem;
     }
@@ -295,9 +258,6 @@
       <div class="progress-bar">
         <div class="progress-fill" id="progressFill"></div>
       </div>
-      <div class="ep-info" id="epInfo">
-        <span class="ep-loading">loading episode info...</span>
-      </div>
     </div>
 
     <div class="window-section">
@@ -317,7 +277,7 @@
       <iframe
         src="https://open.spotify.com/embed/show/30FmvDjIMrZioIoj2PyV0z?utm_source=generator&theme=0"
         width="100%"
-        height="152"
+        height="352"
         frameborder="0"
         allowfullscreen=""
         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
@@ -419,7 +379,6 @@
       saveState();
       updateProgress();
       renderWindow();
-      updateEpInfo();
     });
 
     document.getElementById('resetBtn').addEventListener('click', () => {
@@ -428,55 +387,10 @@
       saveState();
       updateProgress();
       renderWindow();
-      updateEpInfo();
     });
-
-    // RSS feed
-    const RSS_URL = 'https://anchor.fm/s/8dd2f3b0/podcast/rss';
-    const PROXY = `https://corsproxy.io/?${encodeURIComponent(RSS_URL)}`;
-    let episodes = [];
-
-    async function fetchEpisodes() {
-      try {
-        const res = await fetch(PROXY);
-        const text = await res.text();
-        const parser = new DOMParser();
-        const xml = parser.parseFromString(text, 'text/xml');
-        const items = Array.from(xml.querySelectorAll('item')).reverse();
-        console.log('RSS items found:', items.length);
-        if (items[84]) {
-          console.log('Episode 85 title:', items[84].querySelector('title')?.textContent);
-          console.log('Episode 85 desc:', items[84].querySelector('description')?.textContent?.slice(0, 100));
-        }
-        episodes = items.map(item => {
-          const rawDesc = item.querySelector('description')?.textContent || 
-                          item.getElementsByTagNameNS('*', 'encoded')[0]?.textContent || '';
-          return {
-            title: item.querySelector('title')?.textContent?.trim() || '',
-            desc: rawDesc.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').trim()
-          };
-        });
-        updateEpInfo();
-      } catch(e) {
-        console.error('RSS fetch error:', e);
-        document.getElementById('epInfo').innerHTML = '';
-      }
-    }
-
-    function updateEpInfo() {
-      const current = getCurrentEp();
-      const ep = episodes[current - 1];
-      const infoEl = document.getElementById('epInfo');
-      if (!ep) { infoEl.innerHTML = ''; return; }
-      infoEl.innerHTML = `
-        <span class="ep-title">${ep.title}</span>
-        <span class="ep-desc">${ep.desc}</span>
-      `;
-    }
 
     updateProgress();
     renderWindow();
-    fetchEpisodes();
   </script>
 </body>
 </html>
