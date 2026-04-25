@@ -1,0 +1,119 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Courier+Prime&display=swap');
+
+:root {
+  --green: #3d5a3e;
+  --green-light: #7a9e7e;
+  --cream: #f5f2eb;
+  --ink: #1a1a18;
+  --muted: #8a8a7a;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  background-color: var(--cream);
+  color: var(--ink);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+/* --- Typography --- */
+
+h1, h2, h3 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 300;
+  color: var(--ink);
+}
+
+p {
+  font-size: 1.2rem;
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--ink);
+}
+
+blockquote {
+  font-size: 1.85rem;
+  font-weight: 300;
+  font-style: italic;
+  line-height: 1.4;
+  letter-spacing: 0.01em;
+  border-left: 2px solid var(--green-light);
+  padding-left: 1.5rem;
+  color: var(--ink);
+}
+
+/* --- Labels & Accents --- */
+
+.label {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.mark {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--green);
+  border: 1px solid var(--green-light);
+  padding: 0.35rem 0.65rem;
+  display: inline-block;
+}
+
+/* --- Layout --- */
+
+.container {
+  max-width: 480px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2.5rem;
+}
+
+.divider {
+  width: 40px;
+  height: 1px;
+  background: var(--green-light);
+}
+
+/* --- Animation --- */
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: appear 1.2s ease forwards;
+  animation-delay: 0.2s;
+}
+
+@keyframes appear {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- Links --- */
+
+a {
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+
+a:hover {
+  color: var(--green);
+}

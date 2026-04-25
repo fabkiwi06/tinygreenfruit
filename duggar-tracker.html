@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Digging Up the Duggars — Episode Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f5f3ee;
+      --surface: #ffffff;
+      --border: #e0dbd2;
+      --text: #1a1814;
+      --muted: #8a8478;
+      --done-bg: #1a5c3a;
+      --done-text: #d4edd9;
+      --done-border: #134a2e;
+      --accent: #1a5c3a;
+      --progress-track: #e0dbd2;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1.5rem;
+    }
+
+    .eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+
+    h1 {
+      font-size: 26px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.2;
+    }
+
+    .stats {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 20px;
+      flex: 1;
+      min-width: 100px;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: 'DM Mono', monospace;
+      font-size: 28px;
+      font-weight: 500;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .stat-lbl {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .progress-wrap {
+      margin-bottom: 1.75rem;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+      font-family: 'DM Mono', monospace;
+    }
+
+    .progress-bar {
+      height: 5px;
+      background: var(--progress-track);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 99px;
+      transition: width 0.4s ease;
+    }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .legend {
+      display: flex;
+      gap: 14px;
+      flex: 1;
+    }
+
+    .leg-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .leg-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    .reset-btn {
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 7px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .reset-btn:hover {
+      background: #fff0f0;
+      color: #b33;
+      border-color: #f5c0c0;
+    }
+
+    .ep-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));
+      gap: 6px;
+    }
+
+    .ep-btn {
+      aspect-ratio: 1;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.12s, color 0.12s, border-color 0.12s, transform 0.08s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .ep-btn:hover {
+      border-color: #bbb;
+      background: #f0ede8;
+    }
+
+    .ep-btn:active {
+      transform: scale(0.94);
+    }
+
+    .ep-btn.done {
+      background: var(--done-bg);
+      color: var(--done-text);
+      border-color: var(--done-border);
+    }
+
+    .ep-btn.done:hover {
+      background: #133f28;
+    }
+
+    .save-notice {
+      font-size: 11px;
+      color: var(--muted);
+      font-family: 'DM Mono', monospace;
+      text-align: center;
+      margin-top: 2rem;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <p class="eyebrow">Podcast Episode Tracker</p>
+      <h1>Digging Up the Duggars</h1>
+    </header>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-num" id="s-done">0</div>
+        <div class="stat-lbl">Listened</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="s-left">0</div>
+        <div class="stat-lbl">Remaining</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num" id="s-pct">0%</div>
+        <div class="stat-lbl">Complete</div>
+      </div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span>Progress</span>
+        <span id="prog-label">0 / 174</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="prog" style="width: 0%"></div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="legend">
+        <div class="leg-item">
+          <div class="leg-dot" style="background: #1a5c3a;"></div>
+          Listened
+        </div>
+        <div class="leg-item">
+          <div class="leg-dot" style="background: #fff; border: 1px solid #e0dbd2;"></div>
+          Not yet
+        </div>
+      </div>
+      <button class="reset-btn" id="reset-btn">Reset all</button>
+    </div>
+
+    <div class="ep-grid" id="grid"></div>
+
+    <p class="save-notice">Progress saves automatically in your browser.</p>
+  </div>
+
+  <script>
+    const TOTAL = 174;
+    const STORAGE_KEY = 'duggar-tracker-v1';
+
+    function loadState() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) return new Set(JSON.parse(saved));
+      } catch(e) {}
+      const defaults = new Set();
+      for (let i = 1; i <= 84; i++) defaults.add(i);
+      return defaults;
+    }
+
+    function saveState(listened) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify([...listened]));
+      } catch(e) {}
+    }
+
+    const listened = loadState();
+
+    function styleBtn(btn, ep) {
+      if (listened.has(ep)) {
+        btn.style.background = '#1a5c3a';
+        btn.style.color = '#d4edd9';
+        btn.style.borderColor = '#134a2e';
+      } else {
+        btn.style.background = '';
+        btn.style.color = '';
+        btn.style.borderColor = '';
+      }
+    }
+
+    function updateStats() {
+      const done = listened.size;
+      const left = TOTAL - done;
+      const pct = Math.round(done / TOTAL * 100);
+      document.getElementById('s-done').textContent = done;
+      document.getElementById('s-left').textContent = left;
+      document.getElementById('s-pct').textContent = pct + '%';
+      document.getElementById('prog').style.width = pct + '%';
+      document.getElementById('prog-label').textContent = done + ' / ' + TOTAL;
+    }
+
+    const grid = document.getElementById('grid');
+    for (let i = 1; i <= TOTAL; i++) {
+      const btn = document.createElement('button');
+      btn.className = 'ep-btn';
+      btn.textContent = i;
+      btn.id = 'ep-' + i;
+      styleBtn(btn, i);
+      btn.addEventListener('click', () => {
+        if (listened.has(i)) {
+          listened.delete(i);
+        } else {
+          listened.add(i);
+        }
+        styleBtn(btn, i);
+        saveState(listened);
+        updateStats();
+      });
+      grid.appendChild(btn);
+    }
+
+    document.getElementById('reset-btn').addEventListener('click', () => {
+      if (!confirm('Reset all progress? This cannot be undone.')) return;
+      listened.clear();
+      for (let i = 1; i <= TOTAL; i++) styleBtn(document.getElementById('ep-' + i), i);
+      saveState(listened);
+      updateStats();
+    });
+
+    updateStats();
+  </script>
+</body>
+</html>
