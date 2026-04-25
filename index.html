@@ -172,9 +172,14 @@
       display: none;
       flex-direction: column;
       gap: 0.5rem;
-      margin-top: 0.75rem;
-      padding-left: 0.5rem;
-      border-left: 1px solid var(--green-light);
+      position: absolute;
+      top: calc(100% + 0.75rem);
+      left: 0;
+      background: var(--cream);
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--green-light);
+      min-width: 320px;
+      z-index: 10;
     }
 
     .nav-menu.open {
@@ -217,6 +222,7 @@
       <div class="nav-menu" id="navMenu">
         <a href="duggar-tracker.html">Digging Up the Duggars — Episode Tracker</a>
         <a href="horoscope.html">The Stars Align (All Too Well) — Taylor Swift Horoscopes</a>
+        <a href="record-picker.html">What Should We Listen To Tonight? — Vinyl Picker</a>
       </div>
     </div>
 
