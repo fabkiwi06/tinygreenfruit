@@ -4,272 +4,335 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Digging Up the Duggars — Episode Tracker</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Courier+Prime&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg: #f5f3ee;
-      --surface: #ffffff;
-      --border: #e0dbd2;
-      --text: #1a1814;
-      --muted: #8a8478;
-      --done-bg: #1a5c3a;
-      --done-text: #d4edd9;
-      --done-border: #134a2e;
-      --accent: #1a5c3a;
-      --progress-track: #e0dbd2;
-    }
-
     body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      padding: 2rem 1.5rem 4rem;
+      display: block;
+      padding: 3rem 2rem 5rem;
     }
 
     .container {
-      max-width: 860px;
+      max-width: 560px;
       margin: 0 auto;
+      gap: 0;
+    }
+
+    .site-label {
+      display: block;
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+    }
+
+    .site-label a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .site-label a:hover {
+      color: var(--green);
     }
 
     header {
-      margin-bottom: 2rem;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 1.5rem;
+      margin-bottom: 2.5rem;
     }
 
     .eyebrow {
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 0.12em;
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
       color: var(--muted);
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.5rem;
     }
 
     h1 {
-      font-size: 26px;
-      font-weight: 600;
-      color: var(--text);
+      font-size: 2.2rem;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--ink);
       line-height: 1.2;
     }
 
-    .stats {
+    .divider {
+      width: 40px;
+      height: 1px;
+      background: var(--green-light);
+      margin: 2rem 0;
+    }
+
+    .ep-info {
+      margin-top: 1rem;
       display: flex;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
+      flex-direction: column;
+      gap: 0.4rem;
     }
 
-    .stat {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px 20px;
-      flex: 1;
-      min-width: 100px;
-      text-align: center;
+    .ep-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1rem;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--ink);
+      line-height: 1.4;
     }
 
-    .stat-num {
-      font-family: 'DM Mono', monospace;
-      font-size: 28px;
-      font-weight: 500;
-      color: var(--text);
-      line-height: 1;
-    }
-
-    .stat-lbl {
-      font-size: 12px;
+    .ep-desc {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.05em;
       color: var(--muted);
-      margin-top: 5px;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
+      line-height: 1.6;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
-    .progress-wrap {
-      margin-bottom: 1.75rem;
+    .ep-loading {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      opacity: 0.5;
+    }
+
+    .progress-section {
+      margin-bottom: 2.5rem;
     }
 
     .progress-meta {
       display: flex;
       justify-content: space-between;
-      font-size: 12px;
+      align-items: baseline;
+      margin-bottom: 0.75rem;
+    }
+
+    .progress-current {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1.5rem;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--ink);
+    }
+
+    .progress-fraction {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
       color: var(--muted);
-      margin-bottom: 6px;
-      font-family: 'DM Mono', monospace;
     }
 
     .progress-bar {
-      height: 5px;
-      background: var(--progress-track);
-      border-radius: 99px;
-      overflow: hidden;
+      height: 2px;
+      background: var(--green-light);
+      position: relative;
     }
 
     .progress-fill {
+      position: absolute;
+      top: 0;
+      left: 0;
       height: 100%;
-      background: var(--accent);
-      border-radius: 99px;
-      transition: width 0.4s ease;
+      background: var(--green);
+      transition: width 0.5s ease;
     }
 
-    .toolbar {
+    .window-section {
+      margin-bottom: 2.5rem;
+    }
+
+    .window-label {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    .ep-window {
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 1.25rem;
+      gap: 0.5rem;
       flex-wrap: wrap;
     }
 
-    .legend {
-      display: flex;
-      gap: 14px;
-      flex: 1;
-    }
-
-    .leg-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 12px;
+    .ep-pill {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.65rem;
+      border: 1px solid var(--green-light);
+      background: none;
       color: var(--muted);
-    }
-
-    .leg-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 3px;
+      padding: 0.4rem 0.65rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
       flex-shrink: 0;
     }
 
-    .reset-btn {
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      letter-spacing: 0.06em;
+    .ep-pill:hover {
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    .ep-pill.done {
+      background: var(--green);
+      border-color: var(--green);
+      color: var(--cream);
+    }
+
+    .ep-pill.current {
+      border-color: var(--green);
+      color: var(--green);
+      transform: scale(1.15);
+    }
+
+    .ep-pill.current.done {
+      background: var(--green);
+      color: var(--cream);
+      transform: scale(1.15);
+    }
+
+    .ep-dots {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      opacity: 0.4;
+      flex-shrink: 0;
+    }
+
+    .actions {
+      display: flex;
+      gap: 1.25rem;
+      align-items: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .mark-btn {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
-      padding: 7px 14px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: var(--surface);
+      background: var(--green);
+      color: var(--cream);
+      border: none;
+      padding: 0.65rem 1.25rem;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+    }
+
+    .mark-btn:hover {
+      opacity: 0.85;
+    }
+
+    .reset-btn {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: none;
+      border: none;
       color: var(--muted);
       cursor: pointer;
-      transition: background 0.15s, color 0.15s;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color 0.2s ease;
+      padding: 0;
     }
 
     .reset-btn:hover {
-      background: #fff0f0;
-      color: #b33;
-      border-color: #f5c0c0;
+      color: #8a4a4a;
     }
 
-    .ep-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));
-      gap: 6px;
+    .spotify-section {
+      margin-top: 1rem;
     }
 
-    .ep-btn {
-      aspect-ratio: 1;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: var(--surface);
+    .spotify-label {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
       color: var(--muted);
-      font-family: 'DM Mono', monospace;
-      font-size: 11px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background 0.12s, color 0.12s, border-color 0.12s, transform 0.08s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .ep-btn:hover {
-      border-color: #bbb;
-      background: #f0ede8;
-    }
-
-    .ep-btn:active {
-      transform: scale(0.94);
-    }
-
-    .ep-btn.done {
-      background: var(--done-bg);
-      color: var(--done-text);
-      border-color: var(--done-border);
-    }
-
-    .ep-btn.done:hover {
-      background: #133f28;
+      margin-bottom: 0.75rem;
     }
 
     .save-notice {
-      font-size: 11px;
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
       color: var(--muted);
-      font-family: 'DM Mono', monospace;
-      text-align: center;
+      opacity: 0.5;
       margin-top: 2rem;
-      opacity: 0.6;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="container fade-in">
+
+    <span class="site-label"><a href="index.html">← tiny green fruit</a></span>
+
     <header>
       <p class="eyebrow">Podcast Episode Tracker</p>
       <h1>Digging Up the Duggars</h1>
     </header>
 
-    <div class="stats">
-      <div class="stat">
-        <div class="stat-num" id="s-done">0</div>
-        <div class="stat-lbl">Listened</div>
-      </div>
-      <div class="stat">
-        <div class="stat-num" id="s-left">0</div>
-        <div class="stat-lbl">Remaining</div>
-      </div>
-      <div class="stat">
-        <div class="stat-num" id="s-pct">0%</div>
-        <div class="stat-lbl">Complete</div>
-      </div>
-    </div>
+    <div class="divider"></div>
 
-    <div class="progress-wrap">
+    <div class="progress-section">
       <div class="progress-meta">
-        <span>Progress</span>
-        <span id="prog-label">0 / 174</span>
+        <span class="progress-current" id="currentEpLabel">Episode 85</span>
+        <span class="progress-fraction" id="fractionLabel">85 / 176</span>
       </div>
       <div class="progress-bar">
-        <div class="progress-fill" id="prog" style="width: 0%"></div>
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="ep-info" id="epInfo">
+        <span class="ep-loading">loading episode info...</span>
       </div>
     </div>
 
-    <div class="toolbar">
-      <div class="legend">
-        <div class="leg-item">
-          <div class="leg-dot" style="background: #1a5c3a;"></div>
-          Listened
-        </div>
-        <div class="leg-item">
-          <div class="leg-dot" style="background: #fff; border: 1px solid #e0dbd2;"></div>
-          Not yet
-        </div>
-      </div>
-      <button class="reset-btn" id="reset-btn">Reset all</button>
+    <div class="window-section">
+      <p class="window-label">where you are</p>
+      <div class="ep-window" id="epWindow"></div>
     </div>
 
-    <div class="ep-grid" id="grid"></div>
+    <div class="actions">
+      <button class="mark-btn" id="markBtn">Mark episode done</button>
+      <button class="reset-btn" id="resetBtn">reset all</button>
+    </div>
 
-    <p class="save-notice">Progress saves automatically in your browser.</p>
+    <div class="divider"></div>
+
+    <div class="spotify-section">
+      <p class="spotify-label">listen now</p>
+      <iframe
+        src="https://open.spotify.com/embed/show/30FmvDjIMrZioIoj2PyV0z?utm_source=generator&theme=0"
+        width="100%"
+        height="152"
+        frameborder="0"
+        allowfullscreen=""
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        loading="lazy">
+      </iframe>
+    </div>
+
+    <p class="save-notice">Progress saves in this browser only.</p>
+
   </div>
 
   <script>
-    const TOTAL = 174;
-    const STORAGE_KEY = 'duggar-tracker-v1';
+    const TOTAL = 176;
+    const WINDOW = 5;
+    const STORAGE_KEY = 'duggar-tracker-v2';
 
     function loadState() {
       try {
@@ -281,7 +344,7 @@
       return defaults;
     }
 
-    function saveState(listened) {
+    function saveState() {
       try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify([...listened]));
       } catch(e) {}
@@ -289,58 +352,121 @@
 
     const listened = loadState();
 
-    function styleBtn(btn, ep) {
-      if (listened.has(ep)) {
-        btn.style.background = '#1a5c3a';
-        btn.style.color = '#d4edd9';
-        btn.style.borderColor = '#134a2e';
-      } else {
-        btn.style.background = '';
-        btn.style.color = '';
-        btn.style.borderColor = '';
+    function getCurrentEp() {
+      for (let i = 1; i <= TOTAL; i++) {
+        if (!listened.has(i)) return i;
+      }
+      return TOTAL;
+    }
+
+    function updateProgress() {
+      const done = listened.size;
+      const current = getCurrentEp();
+      const pct = Math.round(done / TOTAL * 100);
+      document.getElementById('currentEpLabel').textContent = `Episode ${current}`;
+      document.getElementById('fractionLabel').textContent = `${done} / ${TOTAL}`;
+      document.getElementById('progressFill').style.width = pct + '%';
+    }
+
+    function renderWindow() {
+      const current = getCurrentEp();
+      const windowEl = document.getElementById('epWindow');
+      windowEl.innerHTML = '';
+
+      const start = Math.max(1, current - WINDOW);
+      const end = Math.min(TOTAL, current + WINDOW);
+
+      if (start > 1) {
+        const dots = document.createElement('span');
+        dots.className = 'ep-dots';
+        dots.textContent = '···';
+        windowEl.appendChild(dots);
+      }
+
+      for (let i = start; i <= end; i++) {
+        const btn = document.createElement('button');
+        btn.className = 'ep-pill';
+        btn.textContent = i;
+        if (listened.has(i)) btn.classList.add('done');
+        if (i === current) btn.classList.add('current');
+
+        btn.addEventListener('click', () => {
+          if (listened.has(i)) {
+            listened.delete(i);
+          } else {
+            listened.add(i);
+          }
+          saveState();
+          updateProgress();
+          renderWindow();
+          updateEpInfo();
+        });
+
+        windowEl.appendChild(btn);
+      }
+
+      if (end < TOTAL) {
+        const dots = document.createElement('span');
+        dots.className = 'ep-dots';
+        dots.textContent = '···';
+        windowEl.appendChild(dots);
       }
     }
 
-    function updateStats() {
-      const done = listened.size;
-      const left = TOTAL - done;
-      const pct = Math.round(done / TOTAL * 100);
-      document.getElementById('s-done').textContent = done;
-      document.getElementById('s-left').textContent = left;
-      document.getElementById('s-pct').textContent = pct + '%';
-      document.getElementById('prog').style.width = pct + '%';
-      document.getElementById('prog-label').textContent = done + ' / ' + TOTAL;
-    }
-
-    const grid = document.getElementById('grid');
-    for (let i = 1; i <= TOTAL; i++) {
-      const btn = document.createElement('button');
-      btn.className = 'ep-btn';
-      btn.textContent = i;
-      btn.id = 'ep-' + i;
-      styleBtn(btn, i);
-      btn.addEventListener('click', () => {
-        if (listened.has(i)) {
-          listened.delete(i);
-        } else {
-          listened.add(i);
-        }
-        styleBtn(btn, i);
-        saveState(listened);
-        updateStats();
-      });
-      grid.appendChild(btn);
-    }
-
-    document.getElementById('reset-btn').addEventListener('click', () => {
-      if (!confirm('Reset all progress? This cannot be undone.')) return;
-      listened.clear();
-      for (let i = 1; i <= TOTAL; i++) styleBtn(document.getElementById('ep-' + i), i);
-      saveState(listened);
-      updateStats();
+    document.getElementById('markBtn').addEventListener('click', () => {
+      const current = getCurrentEp();
+      listened.add(current);
+      saveState();
+      updateProgress();
+      renderWindow();
+      updateEpInfo();
     });
 
-    updateStats();
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      if (!confirm('Reset all progress?')) return;
+      listened.clear();
+      saveState();
+      updateProgress();
+      renderWindow();
+      updateEpInfo();
+    });
+
+    // RSS feed
+    const RSS_URL = 'https://anchor.fm/s/8dd2f3b0/podcast/rss';
+    const PROXY = `https://api.allorigins.win/get?url=${encodeURIComponent(RSS_URL)}`;
+    let episodes = [];
+
+    async function fetchEpisodes() {
+      try {
+        const res = await fetch(PROXY);
+        const data = await res.json();
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(data.contents, 'text/xml');
+        const items = Array.from(xml.querySelectorAll('item')).reverse();
+        episodes = items.map(item => ({
+          title: item.querySelector('title')?.textContent || '',
+          desc: item.querySelector('description')?.textContent?.replace(/<[^>]+>/g, '').trim() || ''
+        }));
+        updateEpInfo();
+      } catch(e) {
+        document.getElementById('epInfo').innerHTML = '';
+      }
+    }
+
+    function updateEpInfo() {
+      const current = getCurrentEp();
+      const ep = episodes[current - 1];
+      const infoEl = document.getElementById('epInfo');
+      if (!ep) { infoEl.innerHTML = ''; return; }
+      infoEl.innerHTML = `
+        <span class="ep-title">${ep.title}</span>
+        <span class="ep-desc">${ep.desc}</span>
+      `;
+    }
+
+    updateProgress();
+    renderWindow();
+    fetchEpisodes();
   </script>
 </body>
 </html>
