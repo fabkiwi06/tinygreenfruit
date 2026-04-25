@@ -4,112 +4,116 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>what should we listen to — tinygreenfruit</title>
-  <link rel="stylesheet" href="style.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Courier+Prime&display=swap" rel="stylesheet" />
-
   <style>
+    :root {
+      --green: #3d5a3e;
+      --green-light: #7a9e7e;
+      --cream: #f5f2eb;
+      --ink: #1a1a18;
+      --muted: #8a8a7a;
+    }
+
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background: var(--cream);
+      background-color: var(--cream);
       color: var(--ink);
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Cormorant Garamond', Georgia, serif;
       min-height: 100vh;
-      padding: 3rem 2rem 5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
     }
 
-    header {
-      margin-bottom: 4rem;
-      animation: fadeIn 0.8s ease both;
+    .container {
+      max-width: 520px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2rem;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: appear 1s ease forwards;
     }
 
-    header a {
+    @keyframes appear {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .site-label {
       font-family: 'Courier Prime', monospace;
-      font-size: 0.75rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .site-label a {
       color: var(--muted);
       text-decoration: none;
-      letter-spacing: 0.08em;
-      text-transform: lowercase;
     }
 
-    header a:hover { color: var(--green); }
+    .site-label a:hover { color: var(--green); }
 
     h1 {
-      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-size: 2.8rem;
       font-weight: 300;
       font-style: italic;
       line-height: 1.1;
-      margin-top: 1.5rem;
       color: var(--ink);
     }
 
     .subtitle {
       font-family: 'Courier Prime', monospace;
-      font-size: 0.7rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
       color: var(--muted);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-top: 0.6rem;
+      margin-top: 0.5rem;
     }
 
-    /* ── main card area ── */
-    .stage {
-      max-width: 540px;
-      margin-top: 3rem;
-      animation: fadeIn 1s ease 0.2s both;
-    }
-
-    /* idle state */
-    .idle-prompt {
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
-    }
-
-    .pick-btn {
-      display: inline-block;
-      font-family: 'Courier Prime', monospace;
-      font-size: 0.75rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--cream);
-      background: var(--green);
-      border: none;
-      padding: 0.9rem 2.2rem;
-      cursor: pointer;
-      transition: background 0.2s ease, transform 0.15s ease;
-      align-self: flex-start;
-    }
-
-    .pick-btn:hover {
+    .divider {
+      width: 40px;
+      height: 1px;
       background: var(--green-light);
-      transform: translateY(-1px);
     }
 
-    .pick-btn:disabled {
-      background: var(--muted);
-      cursor: not-allowed;
-      transform: none;
+    /* idle */
+    .pick-btn {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      background: var(--green);
+      color: var(--cream);
+      border: none;
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      transition: opacity 0.2s ease;
     }
+
+    .pick-btn:hover { opacity: 0.85; }
+    .pick-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
     /* record card */
     .record-card {
       display: none;
       flex-direction: column;
       gap: 0;
+      width: 100%;
     }
 
     .record-card.visible {
       display: flex;
-      animation: fadeIn 0.6s ease both;
+      animation: appear 0.6s ease both;
     }
 
     .cover-wrap {
       position: relative;
       width: 100%;
-      max-width: 380px;
       aspect-ratio: 1;
       background: #d8d4c8;
       overflow: hidden;
@@ -123,9 +127,7 @@
       transition: opacity 0.4s ease;
     }
 
-    .cover-wrap img.loading {
-      opacity: 0;
-    }
+    .cover-wrap img.loading { opacity: 0; }
 
     .cover-placeholder {
       position: absolute;
@@ -149,15 +151,15 @@
 
     .record-artist {
       font-family: 'Courier Prime', monospace;
-      font-size: 0.7rem;
-      letter-spacing: 0.12em;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
       color: var(--muted);
       margin-bottom: 0.4rem;
     }
 
     .record-title {
-      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-size: 2rem;
       font-weight: 300;
       font-style: italic;
       line-height: 1.15;
@@ -166,115 +168,109 @@
 
     .record-year {
       font-family: 'Courier Prime', monospace;
-      font-size: 0.68rem;
+      font-size: 0.6rem;
       color: var(--muted);
       margin-top: 0.5rem;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.1em;
     }
 
     /* action buttons */
     .actions {
       display: flex;
-      gap: 1rem;
+      align-items: center;
+      gap: 1.5rem;
       margin-top: 1.8rem;
       flex-wrap: wrap;
     }
 
     .btn-listened {
       font-family: 'Courier Prime', monospace;
-      font-size: 0.72rem;
-      letter-spacing: 0.1em;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
       color: var(--cream);
       background: var(--green);
       border: none;
-      padding: 0.85rem 1.8rem;
+      padding: 0.75rem 1.5rem;
       cursor: pointer;
-      transition: background 0.2s ease, transform 0.15s ease;
+      transition: opacity 0.2s ease;
     }
 
-    .btn-listened:hover {
-      background: var(--green-light);
-      transform: translateY(-1px);
-    }
+    .btn-listened:hover { opacity: 0.85; }
 
     .btn-skip {
       font-family: 'Courier Prime', monospace;
-      font-size: 0.72rem;
-      letter-spacing: 0.1em;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
       text-transform: uppercase;
       color: var(--muted);
       background: transparent;
-      border: 1px solid rgba(138,138,122,0.4);
-      padding: 0.85rem 1.8rem;
+      border: none;
+      padding: 0;
       cursor: pointer;
-      transition: color 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: color 0.2s ease;
     }
 
-    .btn-skip:hover {
-      color: var(--ink);
-      border-color: var(--ink);
-      transform: translateY(-1px);
-    }
+    .btn-skip:hover { color: var(--ink); }
 
-    /* cycle complete banner */
+    /* cycle complete */
     .cycle-banner {
       display: none;
-      border: 1px solid rgba(61,90,62,0.3);
-      padding: 1.6rem;
-      margin-top: 2rem;
-      max-width: 460px;
+      flex-direction: column;
+      gap: 1.25rem;
+      width: 100%;
     }
 
     .cycle-banner.visible {
-      display: block;
-      animation: fadeIn 0.6s ease both;
+      display: flex;
+      animation: appear 0.6s ease both;
+    }
+
+    .cycle-label {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.65rem;
+      color: var(--green);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
     }
 
     .cycle-banner p {
-      font-size: 1.1rem;
+      font-size: 1.25rem;
       font-style: italic;
       font-weight: 300;
       color: var(--ink);
       line-height: 1.5;
     }
 
-    .cycle-banner .cycle-label {
-      font-family: 'Courier Prime', monospace;
-      font-size: 0.65rem;
-      color: var(--green);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-bottom: 0.6rem;
-    }
-
     /* progress */
-    .progress-line {
-      margin-top: 3rem;
-      max-width: 380px;
-      animation: fadeIn 1s ease 0.4s both;
+    .progress-wrap {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
     }
 
     .progress-label {
       font-family: 'Courier Prime', monospace;
-      font-size: 0.65rem;
+      font-size: 0.6rem;
       color: var(--muted);
-      letter-spacing: 0.1em;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      margin-bottom: 0.5rem;
       display: flex;
       justify-content: space-between;
     }
 
     .progress-track {
       width: 100%;
-      height: 2px;
+      height: 1px;
       background: rgba(138,138,122,0.25);
     }
 
     .progress-fill {
       height: 100%;
-      background: var(--green);
+      background: var(--green-light);
       transition: width 0.6s ease;
     }
 
@@ -282,90 +278,81 @@
     .toast {
       position: fixed;
       bottom: 2rem;
-      left: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(6px);
       font-family: 'Courier Prime', monospace;
-      font-size: 0.7rem;
-      letter-spacing: 0.08em;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
       color: var(--cream);
       background: var(--ink);
-      padding: 0.7rem 1.2rem;
+      padding: 0.65rem 1.2rem;
       opacity: 0;
-      transform: translateY(6px);
       transition: opacity 0.3s ease, transform 0.3s ease;
       pointer-events: none;
+      white-space: nowrap;
     }
 
     .toast.show {
       opacity: 1;
-      transform: translateY(0);
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @media (max-width: 480px) {
-      body { padding: 2rem 1.25rem 4rem; }
-      .cover-wrap { max-width: 100%; }
+      transform: translateX(-50%) translateY(0);
     }
   </style>
 </head>
 <body>
 
-  <header>
-    <a href="index.html">← tinygreenfruit</a>
-    <h1>what should we<br>listen to tonight?</h1>
-    <p class="subtitle">the collection, shuffled with memory</p>
-  </header>
+  <div class="container">
 
-  <main>
-    <div class="stage">
+    <div class="site-label"><a href="index.html">← tinygreenfruit</a></div>
 
-      <!-- idle -->
-      <div class="idle-prompt" id="idleState">
-        <button class="pick-btn" id="pickBtn" onclick="pickRecord()">pick a record</button>
+    <div>
+      <h1>what should we<br>listen to tonight?</h1>
+      <p class="subtitle">the collection, shuffled with memory</p>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- idle state -->
+    <div id="idleState">
+      <button class="pick-btn" id="pickBtn" onclick="pickRecord()">pick a record</button>
+    </div>
+
+    <!-- record card -->
+    <div class="record-card" id="recordCard">
+      <div class="cover-wrap">
+        <div class="cover-placeholder" id="coverPlaceholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+            <circle cx="12" cy="12" r="10"/>
+            <circle cx="12" cy="12" r="3"/>
+            <line x1="12" y1="2" x2="12" y2="9"/>
+            <line x1="12" y1="15" x2="12" y2="22"/>
+            <line x1="2" y1="12" x2="9" y2="12"/>
+            <line x1="15" y1="12" x2="22" y2="12"/>
+          </svg>
+        </div>
+        <img id="coverImg" class="loading" src="" alt="" />
       </div>
 
-      <!-- record card -->
-      <div class="record-card" id="recordCard">
-        <div class="cover-wrap" id="coverWrap">
-          <div class="cover-placeholder" id="coverPlaceholder">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
-              <circle cx="12" cy="12" r="10"/>
-              <circle cx="12" cy="12" r="3"/>
-              <line x1="12" y1="2" x2="12" y2="9"/>
-              <line x1="12" y1="15" x2="12" y2="22"/>
-              <line x1="2" y1="12" x2="9" y2="12"/>
-              <line x1="15" y1="12" x2="22" y2="12"/>
-            </svg>
-          </div>
-          <img id="coverImg" class="loading" src="" alt="" />
-        </div>
-
-        <div class="record-meta">
-          <div class="record-artist" id="recordArtist"></div>
-          <div class="record-title" id="recordTitle"></div>
-          <div class="record-year" id="recordYear"></div>
-        </div>
-
-        <div class="actions">
-          <button class="btn-listened" onclick="logListened()">✓ listened to this</button>
-          <button class="btn-skip" onclick="skipRecord()">skip for tonight</button>
-        </div>
+      <div class="record-meta">
+        <div class="record-artist" id="recordArtist"></div>
+        <div class="record-title" id="recordTitle"></div>
+        <div class="record-year" id="recordYear"></div>
       </div>
 
-      <!-- cycle complete -->
-      <div class="cycle-banner" id="cycleBanner">
-        <div class="cycle-label">cycle complete</div>
-        <p>You've listened to everything at least once. Starting a new cycle.</p>
-        <button class="pick-btn" style="margin-top:1.4rem" onclick="resetCycle()">start fresh</button>
+      <div class="actions">
+        <button class="btn-listened" onclick="logListened()">✓ listened to this</button>
+        <button class="btn-skip" onclick="skipRecord()">skip for tonight</button>
       </div>
+    </div>
 
+    <!-- cycle complete -->
+    <div class="cycle-banner" id="cycleBanner">
+      <div class="cycle-label">cycle complete</div>
+      <p>You've listened to everything at least once. Time to start fresh.</p>
+      <button class="pick-btn" onclick="resetCycle()">start a new cycle</button>
     </div>
 
     <!-- progress -->
-    <div class="progress-line" id="progressLine" style="display:none">
+    <div class="progress-wrap" id="progressWrap" style="display:none">
       <div class="progress-label">
         <span>this cycle</span>
         <span id="progressCount">0 / 0</span>
@@ -374,7 +361,8 @@
         <div class="progress-fill" id="progressFill" style="width:0%"></div>
       </div>
     </div>
-  </main>
+
+  </div>
 
   <div class="toast" id="toast"></div>
 
@@ -435,7 +423,7 @@
       document.getElementById('idleState').style.display = 'none';
       document.getElementById('cycleBanner').classList.remove('visible');
       document.getElementById('recordCard').classList.add('visible');
-      document.getElementById('progressLine').style.display = 'block';
+      document.getElementById('progressWrap').style.display = 'flex';
     }
 
     async function logListened() {
@@ -453,15 +441,14 @@
         showToast('logged. nice one.');
         currentRecord = null;
 
-        // reset card, show pick button again
         document.getElementById('recordCard').classList.remove('visible');
+        document.getElementById('idleState').style.display = 'block';
         const btn = document.getElementById('pickBtn');
-        document.getElementById('idleState').style.display = 'flex';
         btn.disabled = false;
         btn.textContent = 'pick another';
 
       } catch (e) {
-        showToast('couldn't log that. try again.');
+        showToast("couldn't log that. try again.");
       }
     }
 
@@ -471,8 +458,8 @@
       currentRecord = null;
 
       document.getElementById('recordCard').classList.remove('visible');
+      document.getElementById('idleState').style.display = 'block';
       const btn = document.getElementById('pickBtn');
-      document.getElementById('idleState').style.display = 'flex';
       btn.disabled = false;
       btn.textContent = 'pick another';
     }
@@ -489,7 +476,7 @@
         skippedThisSession.clear();
         listenedCount = 0;
         document.getElementById('cycleBanner').classList.remove('visible');
-        document.getElementById('idleState').style.display = 'flex';
+        document.getElementById('idleState').style.display = 'block';
         const btn = document.getElementById('pickBtn');
         btn.disabled = false;
         btn.textContent = 'pick a record';
