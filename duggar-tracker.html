@@ -144,6 +144,24 @@
       opacity: 0.5;
     }
 
+    .listen-btn {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--cream);
+      background: var(--green);
+      padding: 0.65rem 1.25rem;
+      text-decoration: none;
+      display: inline-block;
+      transition: opacity 0.2s ease;
+    }
+
+    .listen-btn:hover {
+      opacity: 0.85;
+      color: var(--cream);
+    }
+
     .spotify-section {
       margin-top: 1rem;
     }
@@ -187,17 +205,7 @@
 
     <div class="spotify-section">
       <p class="spotify-label">listen now</p>
-      <div id="spotifyEmbed">
-        <iframe
-          src="https://open.spotify.com/embed/show/30FmvDjIMrZioIoj2PyV0z?utm_source=generator&theme=0"
-          width="100%"
-          height="152"
-          frameborder="0"
-          allowfullscreen=""
-          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-          loading="lazy">
-        </iframe>
-      </div>
+      <div id="spotifyEmbed"></div>
     </div>
 
   </div>
@@ -222,35 +230,30 @@
           episodeTitle = ep.querySelector('title')?.textContent?.trim() || '';
           const rawDesc = (ep.querySelector('description')?.textContent || '')
             .replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').trim();
+
+          // Try to get episode link
+          const enclosure = ep.querySelector('enclosure');
+          const linkEl = ep.querySelector('link');
+          const epLink = linkEl?.textContent?.trim() || 
+                         ep.getElementsByTagNameNS('*', 'episodeUrl')[0]?.textContent?.trim() || '';
+
           document.getElementById('epInfo').innerHTML = `
             <span class="ep-title">${episodeTitle}</span>
             <span class="ep-desc">${rawDesc}</span>
           `;
+
+          if (epLink) {
+            document.getElementById('spotifyEmbed').innerHTML = `
+              <a class="listen-btn" href="${epLink}" target="_blank" rel="noopener">Listen on Spotify →</a>
+            `;
+          } else {
+            document.getElementById('spotifyEmbed').innerHTML = `
+              <a class="listen-btn" href="https://open.spotify.com/show/30FmvDjIMrZioIoj2PyV0z" target="_blank" rel="noopener">Listen on Spotify →</a>
+            `;
+          }
         }
       } catch(e) {
         document.getElementById('epInfo').innerHTML = '';
-      }
-
-      if (episodeTitle) {
-        try {
-          const spotifyRes = await fetch(`${SERVER}/spotify/episode?title=${encodeURIComponent(episodeTitle)}`);
-          const spotifyData = await spotifyRes.json();
-          if (spotifyData.id) {
-            document.getElementById('spotifyEmbed').innerHTML = `
-              <iframe
-                src="https://open.spotify.com/embed/episode/${spotifyData.id}?utm_source=generator&theme=0"
-                width="100%"
-                height="152"
-                frameborder="0"
-                allowfullscreen=""
-                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                loading="lazy">
-              </iframe>
-            `;
-          }
-        } catch(e) {
-          // fall back to show embed
-        }
       }
     }
 
