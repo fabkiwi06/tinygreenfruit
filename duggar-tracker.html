@@ -443,12 +443,22 @@
         const parser = new DOMParser();
         const xml = parser.parseFromString(text, 'text/xml');
         const items = Array.from(xml.querySelectorAll('item')).reverse();
-        episodes = items.map(item => ({
-          title: item.querySelector('title')?.textContent || '',
-          desc: item.querySelector('description')?.textContent?.replace(/<[^>]+>/g, '').trim() || ''
-        }));
+        console.log('RSS items found:', items.length);
+        if (items[84]) {
+          console.log('Episode 85 title:', items[84].querySelector('title')?.textContent);
+          console.log('Episode 85 desc:', items[84].querySelector('description')?.textContent?.slice(0, 100));
+        }
+        episodes = items.map(item => {
+          const rawDesc = item.querySelector('description')?.textContent || 
+                          item.getElementsByTagNameNS('*', 'encoded')[0]?.textContent || '';
+          return {
+            title: item.querySelector('title')?.textContent?.trim() || '',
+            desc: rawDesc.replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').trim()
+          };
+        });
         updateEpInfo();
       } catch(e) {
+        console.error('RSS fetch error:', e);
         document.getElementById('epInfo').innerHTML = '';
       }
     }
