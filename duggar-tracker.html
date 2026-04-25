@@ -66,6 +66,34 @@
       margin: 2rem 0;
     }
 
+    .ep-info {
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .ep-title {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 1rem;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--ink);
+      line-height: 1.4;
+    }
+
+    .ep-desc {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      line-height: 1.6;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
     .progress-section {
       margin-bottom: 1.25rem;
     }
@@ -258,6 +286,7 @@
       <div class="progress-bar">
         <div class="progress-fill" id="progressFill"></div>
       </div>
+      <div class="ep-info" id="epInfo"></div>
     </div>
 
     <div class="window-section">
@@ -275,9 +304,9 @@
     <div class="spotify-section">
       <p class="spotify-label">listen now</p>
       <iframe
-        src="https://open.spotify.com/embed/show/30FmvDjIMrZioIoj2PyV0z?utm_source=generator&theme=0&view=list"
+        src="https://open.spotify.com/embed/show/30FmvDjIMrZioIoj2PyV0z?utm_source=generator&theme=0"
         width="100%"
-        height="352"
+        height="152"
         frameborder="0"
         allowfullscreen=""
         allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
@@ -359,7 +388,6 @@
           saveState();
           updateProgress();
           renderWindow();
-          updateEpInfo();
         });
 
         windowEl.appendChild(btn);
@@ -379,6 +407,7 @@
       saveState();
       updateProgress();
       renderWindow();
+      updateEpInfo();
     });
 
     document.getElementById('resetBtn').addEventListener('click', () => {
@@ -387,10 +416,45 @@
       saveState();
       updateProgress();
       renderWindow();
+      updateEpInfo();
     });
+
+    // RSS
+    const SERVER = 'http://159.223.161.68:5000';
+    let episodes = [];
+
+    async function fetchEpisodes() {
+      try {
+        const res = await fetch(`${SERVER}/rss`);
+        const text = await res.text();
+        const parser = new DOMParser();
+        const xml = parser.parseFromString(text, 'text/xml');
+        const items = Array.from(xml.querySelectorAll('item')).reverse();
+        episodes = items.map(item => ({
+          title: item.querySelector('title')?.textContent?.trim() || '',
+          desc: (item.querySelector('description')?.textContent || '')
+            .replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').trim()
+        }));
+        updateEpInfo();
+      } catch(e) {
+        document.getElementById('epInfo').innerHTML = '';
+      }
+    }
+
+    function updateEpInfo() {
+      const current = getCurrentEp();
+      const ep = episodes[current - 1];
+      const infoEl = document.getElementById('epInfo');
+      if (!ep || !infoEl) return;
+      infoEl.innerHTML = `
+        <span class="ep-title">${ep.title}</span>
+        <span class="ep-desc">${ep.desc}</span>
+      `;
+    }
 
     updateProgress();
     renderWindow();
+    fetchEpisodes();
   </script>
 </body>
 </html>
