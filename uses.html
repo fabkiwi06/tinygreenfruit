@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>uses — tiny green fruit</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Courier+Prime&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --green: #3d5a3e;
+  --green-light: #7a9e7e;
+  --cream: #f5f2eb;
+  --ink: #1a1a18;
+  --muted: #8a8a7a;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--cream);
+  color: var(--ink);
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 4rem 2rem;
+}
+
+.container {
+  max-width: 480px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2.5rem;
+  opacity: 0;
+  transform: translateY(12px);
+  animation: appear 1.2s ease forwards;
+  animation-delay: 0.2s;
+}
+
+@keyframes appear {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.site-label {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.site-label a {
+  color: var(--muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.site-label a:hover {
+  color: var(--green);
+}
+
+h1 {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--green);
+  font-weight: 400;
+}
+
+.divider {
+  width: 40px;
+  height: 1px;
+  background: var(--green-light);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+.section-title {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--green);
+  font-weight: 400;
+}
+
+.subsection {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.subsection-title {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--muted);
+}
+
+.items {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding-left: 0.1rem;
+}
+
+.items li {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 1.2rem;
+  font-weight: 300;
+  color: var(--ink);
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.items li::before {
+  content: '';
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background-color: var(--green-light);
+  flex-shrink: 0;
+  margin-bottom: 0.1em;
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="site-label"><a href="index.html">← tiny green fruit</a></div>
+
+  <h1>uses</h1>
+
+  <div class="divider"></div>
+
+  <!-- Hardware -->
+  <div class="section">
+    <span class="section-title">hardware</span>
+    <div class="subsection">
+      <span class="subsection-title">computer</span>
+      <ul class="items">
+        <li>MacBook Air 13-inch, M3, 2024 · 8GB</li>
+      </ul>
+    </div>
+    <div class="subsection">
+      <span class="subsection-title">phone</span>
+      <ul class="items">
+        <li>iPhone 16</li>
+      </ul>
+    </div>
+    <div class="subsection">
+      <span class="subsection-title">audio</span>
+      <ul class="items">
+        <li>AirPods 3rd generation</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Software -->
+  <div class="section">
+    <span class="section-title">software</span>
+    <div class="subsection">
+      <span class="subsection-title">browser</span>
+      <ul class="items">
+        <li>Chrome</li>
+      </ul>
+    </div>
+    <div class="subsection">
+      <span class="subsection-title">terminal</span>
+      <ul class="items">
+        <li>iTerm2</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- This Site -->
+  <div class="section">
+    <span class="section-title">this site</span>
+    <div class="subsection">
+      <span class="subsection-title">backend</span>
+      <ul class="items">
+        <li>Flask / Python</li>
+        <li>DigitalOcean</li>
+        <li>Docker</li>
+      </ul>
+    </div>
+    <div class="subsection">
+      <span class="subsection-title">frontend</span>
+      <ul class="items">
+        <li>GitHub Pages</li>
+      </ul>
+    </div>
+    <div class="subsection">
+      <span class="subsection-title">infrastructure</span>
+      <ul class="items">
+        <li>nginx</li>
+        <li>GitHub Actions</li>
+      </ul>
+    </div>
+    <div class="subsection">
+      <span class="subsection-title">fonts</span>
+      <ul class="items">
+        <li>Cormorant Garamond</li>
+        <li>Courier Prime</li>
+      </ul>
+    </div>
+    <div class="subsection">
+      <span class="subsection-title">AI</span>
+      <ul class="items">
+        <li>Anthropic claude-sonnet-4-6</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Coffee -->
+  <div class="section">
+    <span class="section-title">coffee</span>
+    <ul class="items">
+      <li>8oz drip, half &amp; half, homemade brown sugar syrup</li>
+    </ul>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Swifty Era -->
+  <div class="section">
+    <span class="section-title">swifty era</span>
+    <ul class="items">
+      <li>1989 <span style="font-family: 'Courier Prime', monospace; font-size: 0.65rem; letter-spacing: 0.1em; color: var(--green-light); margin-left: 0.25rem;">original</span></li>
+    </ul>
+  </div>
+
+</div>
+</body>
+</html>
