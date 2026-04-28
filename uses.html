@@ -83,6 +83,15 @@ h1 {
   background: var(--green-light);
 }
 
+.descriptor {
+  font-size: 1rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--muted);
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+}
+
 .section {
   display: flex;
   flex-direction: column;
@@ -141,6 +150,46 @@ h1 {
   flex-shrink: 0;
   margin-bottom: 0.1em;
 }
+
+.section-toggle {
+  font-family: 'Courier Prime', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: color 0.2s ease;
+}
+
+.section-toggle:hover {
+  color: var(--green);
+}
+
+.section-toggle .arrow {
+  font-size: 0.5rem;
+  transition: transform 0.2s ease;
+  display: inline-block;
+}
+
+.section-toggle.open .arrow {
+  transform: rotate(180deg);
+}
+
+.section-body {
+  display: none;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.section-body.open {
+  display: flex;
+}
 </style>
 </head>
 <body>
@@ -150,28 +199,32 @@ h1 {
 
   <h1>uses</h1>
 
+  <p class="descriptor">professional setup. questionable priorities.</p>
+
   <div class="divider"></div>
 
   <!-- Hardware -->
   <div class="section">
-    <span class="section-title">hardware</span>
-    <div class="subsection">
-      <span class="subsection-title">computer</span>
-      <ul class="items">
-        <li>MacBook Air 13-inch, M3, 2024 · 8GB</li>
-      </ul>
-    </div>
-    <div class="subsection">
-      <span class="subsection-title">phone</span>
-      <ul class="items">
-        <li>iPhone 16</li>
-      </ul>
-    </div>
-    <div class="subsection">
-      <span class="subsection-title">audio</span>
-      <ul class="items">
-        <li>AirPods 3rd generation</li>
-      </ul>
+    <button class="section-toggle" data-target="hardware">hardware <span class="arrow">▼</span></button>
+    <div class="section-body" id="hardware">
+      <div class="subsection">
+        <span class="subsection-title">computer</span>
+        <ul class="items">
+          <li>MacBook Air 13-inch, M3, 2024 · 8GB</li>
+        </ul>
+      </div>
+      <div class="subsection">
+        <span class="subsection-title">phone</span>
+        <ul class="items">
+          <li>iPhone 16</li>
+        </ul>
+      </div>
+      <div class="subsection">
+        <span class="subsection-title">audio</span>
+        <ul class="items">
+          <li>AirPods 3rd generation</li>
+        </ul>
+      </div>
     </div>
   </div>
 
@@ -179,18 +232,20 @@ h1 {
 
   <!-- Software -->
   <div class="section">
-    <span class="section-title">software</span>
-    <div class="subsection">
-      <span class="subsection-title">browser</span>
-      <ul class="items">
-        <li>Chrome</li>
-      </ul>
-    </div>
-    <div class="subsection">
-      <span class="subsection-title">terminal</span>
-      <ul class="items">
-        <li>iTerm2</li>
-      </ul>
+    <button class="section-toggle" data-target="software">software <span class="arrow">▼</span></button>
+    <div class="section-body" id="software">
+      <div class="subsection">
+        <span class="subsection-title">browser</span>
+        <ul class="items">
+          <li>Chrome</li>
+        </ul>
+      </div>
+      <div class="subsection">
+        <span class="subsection-title">terminal</span>
+        <ul class="items">
+          <li>iTerm2</li>
+        </ul>
+      </div>
     </div>
   </div>
 
@@ -198,63 +253,75 @@ h1 {
 
   <!-- This Site -->
   <div class="section">
-    <span class="section-title">this site</span>
-    <div class="subsection">
-      <span class="subsection-title">backend</span>
-      <ul class="items">
-        <li>Flask / Python</li>
-        <li>DigitalOcean</li>
-        <li>Docker</li>
-      </ul>
-    </div>
-    <div class="subsection">
-      <span class="subsection-title">frontend</span>
-      <ul class="items">
-        <li>GitHub Pages</li>
-      </ul>
-    </div>
-    <div class="subsection">
-      <span class="subsection-title">infrastructure</span>
-      <ul class="items">
-        <li>nginx</li>
-        <li>GitHub Actions</li>
-      </ul>
-    </div>
-    <div class="subsection">
-      <span class="subsection-title">fonts</span>
-      <ul class="items">
-        <li>Cormorant Garamond</li>
-        <li>Courier Prime</li>
-      </ul>
-    </div>
-    <div class="subsection">
-      <span class="subsection-title">AI</span>
-      <ul class="items">
-        <li>Anthropic claude-sonnet-4-6</li>
-      </ul>
+    <button class="section-toggle" data-target="this-site">this site <span class="arrow">▼</span></button>
+    <div class="section-body" id="this-site">
+      <div class="subsection">
+        <span class="subsection-title">backend</span>
+        <ul class="items">
+          <li>Flask / Python</li>
+          <li>DigitalOcean</li>
+          <li>Docker</li>
+        </ul>
+      </div>
+      <div class="subsection">
+        <span class="subsection-title">frontend</span>
+        <ul class="items">
+          <li>GitHub Pages</li>
+        </ul>
+      </div>
+      <div class="subsection">
+        <span class="subsection-title">infrastructure</span>
+        <ul class="items">
+          <li>nginx</li>
+          <li>GitHub Actions</li>
+        </ul>
+      </div>
+      <div class="subsection">
+        <span class="subsection-title">fonts</span>
+        <ul class="items">
+          <li>Cormorant Garamond</li>
+          <li>Courier Prime</li>
+        </ul>
+      </div>
+      <div class="subsection">
+        <span class="subsection-title">AI</span>
+        <ul class="items">
+          <li>Anthropic claude-sonnet-4-6</li>
+        </ul>
+      </div>
     </div>
   </div>
 
   <div class="divider"></div>
 
-  <!-- Coffee -->
+  <!-- The Things That Matter -->
   <div class="section">
-    <span class="section-title">coffee</span>
-    <ul class="items">
-      <li>8oz drip, half &amp; half, homemade brown sugar syrup</li>
-    </ul>
-  </div>
-
-  <div class="divider"></div>
-
-  <!-- Swifty Era -->
-  <div class="section">
-    <span class="section-title">swifty era</span>
-    <ul class="items">
-      <li>1989 <span style="font-family: 'Courier Prime', monospace; font-size: 0.65rem; letter-spacing: 0.1em; color: var(--green-light); margin-left: 0.25rem;">original</span></li>
-    </ul>
+    <button class="section-toggle" data-target="things-that-matter">the things that matter <span class="arrow">▼</span></button>
+    <div class="section-body" id="things-that-matter">
+      <div class="subsection">
+        <span class="subsection-title">coffee</span>
+        <ul class="items">
+          <li>8oz drip, half &amp; half, homemade brown sugar syrup</li>
+        </ul>
+      </div>
+      <div class="subsection">
+        <span class="subsection-title">swifty era</span>
+        <ul class="items">
+          <li>1989 <span style="font-family: 'Courier Prime', monospace; font-size: 0.65rem; letter-spacing: 0.1em; color: var(--green-light); margin-left: 0.25rem;">original</span></li>
+        </ul>
+      </div>
+    </div>
   </div>
 
 </div>
+<script>
+  document.querySelectorAll('.section-toggle').forEach(function(toggle) {
+    toggle.addEventListener('click', function() {
+      const target = document.getElementById(this.dataset.target);
+      this.classList.toggle('open');
+      target.classList.toggle('open');
+    });
+  });
+</script>
 </body>
 </html>
