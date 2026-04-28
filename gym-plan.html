@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>gym plan — tinygreenfruit</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #f5f2eb;
+      --green: #3d5a3e;
+      --green-light: #7a9e7e;
+      --ink: #1a1a18;
+      --muted: #8a8a7a;
+      --border: rgba(61, 90, 62, 0.2);
+      --border-light: rgba(61, 90, 62, 0.1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { font-size: 16px; }
+
+    body {
+      background-color: var(--cream);
+      color: var(--ink);
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-weight: 300;
+      line-height: 1.7;
+      min-height: 100vh;
+      padding: 3rem 1.5rem 5rem;
+    }
+
+    .page {
+      max-width: 680px;
+      margin: 0 auto;
+      opacity: 0;
+      animation: fadeIn 0.8s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 3rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .site-label {
+      font-family: 'Courier Prime', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+      display: block;
+    }
+
+    .site-label a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .site-label a:hover { color: var(--green); }
+
+    h1 {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-weight: 300;
+      font-size: clamp(2rem, 6vw, 3rem);
+      line-height: 1.1;
+      color: var(--ink);
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--green);
+    }
+
+    .subtitle {
+      font-family: 'Courier Prime', monospace;
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* Nav tabs */
+    .tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 2.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tab-btn {
+      font-family: 'Courier Prime', monospace;
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      background: none;
+      border: none;
+      padding: 0.75rem 1.25rem 0.75rem 0;
+      cursor: pointer;
+      position: relative;
+      transition: color 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .tab-btn::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--green);
+      transform: scaleX(0);
+      transition: transform 0.2s ease;
+    }
+
+    .tab-btn.active {
+      color: var(--green);
+    }
+
+    .tab-btn.active::after {
+      transform: scaleX(1);
+    }
+
+    .tab-btn:hover { color: var(--ink); }
+
+    /* Panels */
+    .panel { display: none; }
+    .panel.active {
+      display: block;
+      animation: slideIn 0.3s ease;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Section label */
+    .section-label {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--green-light);
+      margin-bottom: 0.75rem;
+      margin-top: 2rem;
+    }
+
+    .section-label:first-child { margin-top: 0; }
+
+    /* Recovery badge */
+    .recovery-badge {
+      display: inline-block;
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      letter-spacing: 0.06em;
+      padding: 4px 10px;
+      border-radius: 2px;
+      margin-bottom: 1.5rem;
+    }
+
+    .badge-sauna { background: rgba(186, 117, 23, 0.12); color: #854F0B; }
+    .badge-hydro { background: rgba(15, 110, 86, 0.12); color: #0F6E56; }
+    .badge-choice { background: rgba(61, 90, 62, 0.1); color: var(--green); }
+
+    /* Treadmill table */
+    .treadmill-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'Courier Prime', monospace;
+      font-size: 13px;
+      margin-bottom: 0.5rem;
+    }
+
+    .treadmill-table thead th {
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 400;
+      text-align: left;
+      padding: 0 0 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .treadmill-table thead th:not(:first-child) { text-align: right; }
+
+    .treadmill-table tbody td {
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border-light);
+      color: var(--ink);
+      vertical-align: middle;
+    }
+
+    .treadmill-table tbody td:not(:first-child) { text-align: right; }
+
+    .treadmill-table tbody tr:last-child td { border-bottom: none; }
+
+    .treadmill-table tbody tr.push-row td {
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    .treadmill-table tbody tr.push-row td:first-child::before {
+      content: '↑ ';
+      font-size: 10px;
+    }
+
+    /* Circuit list */
+    .circuit-list {
+      list-style: none;
+    }
+
+    .circuit-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .circuit-item:last-child { border-bottom: none; }
+
+    .circuit-num {
+      font-family: 'Courier Prime', monospace;
+      font-size: 10px;
+      color: var(--cream);
+      background: var(--green);
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 3px;
+    }
+
+    .circuit-text { flex: 1; }
+
+    .circuit-name {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 17px;
+      font-weight: 400;
+      color: var(--ink);
+      line-height: 1.3;
+    }
+
+    .circuit-detail {
+      font-family: 'Courier Prime', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 1px;
+    }
+
+    .circuit-timer {
+      font-family: 'Courier Prime', monospace;
+      font-size: 11px;
+      color: var(--green-light);
+      white-space: nowrap;
+      padding-top: 4px;
+    }
+
+    /* Note */
+    .note {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-style: italic;
+      font-size: 15px;
+      color: var(--muted);
+      margin-top: 1rem;
+      padding-left: 1rem;
+      border-left: 2px solid var(--border);
+      line-height: 1.5;
+    }
+
+    /* Round info */
+    .round-info {
+      font-family: 'Courier Prime', monospace;
+      font-size: 11px;
+      color: var(--green);
+      letter-spacing: 0.05em;
+      margin-bottom: 1rem;
+      padding: 6px 10px;
+      border: 1px solid var(--border);
+      display: inline-block;
+      border-radius: 2px;
+    }
+
+    /* Track panel */
+    .inbody-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.5rem;
+      padding: 1.25rem 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .inbody-item:last-child { border-bottom: none; }
+
+    .inbody-week {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 2.25rem;
+      font-weight: 300;
+      font-style: italic;
+      color: var(--green);
+      line-height: 1;
+      min-width: 80px;
+    }
+
+    .inbody-content {}
+
+    .inbody-label {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--ink);
+    }
+
+    .inbody-sub {
+      font-family: 'Courier Prime', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    /* Goal block */
+    .goal-block {
+      margin-top: 2.5rem;
+      padding: 1.5rem 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .goal-numbers {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: clamp(1.75rem, 5vw, 2.5rem);
+      font-weight: 300;
+      color: var(--ink);
+      margin-bottom: 0.5rem;
+    }
+
+    .goal-numbers em {
+      font-style: italic;
+      color: var(--green);
+    }
+
+    .goal-note {
+      font-family: 'Courier Prime', monospace;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* Divider */
+    .divider {
+      height: 1px;
+      background: var(--border-light);
+      margin: 2rem 0;
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 4rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-family: 'Courier Prime', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    @media (max-width: 480px) {
+      body { padding: 2rem 1.25rem 4rem; }
+      .tabs { overflow-x: auto; padding-bottom: 0; }
+      .tab-btn { padding: 0.75rem 1rem 0.75rem 0; font-size: 10px; }
+      .inbody-week { min-width: 60px; font-size: 1.75rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <header class="header">
+      <span class="site-label"><a href="index.html">← tinygreenfruit</a></span>
+      <h1>the <em>gym</em> plan</h1>
+      <p class="subtitle">i don't sweat, i sparkle</p>
+    </header>
+
+    <nav class="tabs">
+      <button class="tab-btn active" onclick="show('d1', this)">Day 1</button>
+      <button class="tab-btn" onclick="show('d2', this)">Day 2</button>
+      <button class="tab-btn" onclick="show('d3', this)">Day 3</button>
+
+    </nav>
+
+    <!-- DAY 1 -->
+    <div id="d1" class="panel active">
+      <span class="recovery-badge badge-sauna">+ dry sauna &mdash; 15 to 20 min</span>
+
+      <p class="section-label">Treadmill intervals &mdash; 30 min</p>
+
+      <table class="treadmill-table">
+        <thead>
+          <tr>
+            <th>Minutes</th>
+            <th>Speed</th>
+            <th>Incline</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>0 &ndash; 5</td><td>2.5</td><td>0&ndash;2%</td></tr>
+          <tr class="push-row"><td>5 &ndash; 8</td><td>3.0</td><td>5%</td></tr>
+          <tr><td>8 &ndash; 10</td><td>2.5</td><td>2%</td></tr>
+          <tr class="push-row"><td>10 &ndash; 13</td><td>3.0&ndash;3.5</td><td>8%</td></tr>
+          <tr><td>13 &ndash; 15</td><td>2.5</td><td>2%</td></tr>
+          <tr class="push-row"><td>15 &ndash; 18</td><td>3.0</td><td>10&ndash;12%</td></tr>
+          <tr><td>18 &ndash; 20</td><td>2.5</td><td>2%</td></tr>
+          <tr class="push-row"><td>20 &ndash; 23</td><td>3.0&ndash;3.5</td><td>10%</td></tr>
+          <tr><td>23 &ndash; 25</td><td>2.5</td><td>2%</td></tr>
+          <tr class="push-row"><td>25 &ndash; 28</td><td>3.0</td><td>12%</td></tr>
+          <tr><td>28 &ndash; 30</td><td>2.5</td><td>0%</td></tr>
+        </tbody>
+      </table>
+
+      <p class="note">When it feels easy &mdash; add incline before speed. Incline is the intensity lever.</p>
+
+      <p class="section-label">Kettlebell finisher &mdash; 10 min</p>
+      <p class="round-info">3 rounds &mdash; minimal rest between</p>
+
+      <ul class="circuit-list">
+        <li class="circuit-item">
+          <div class="circuit-num">1</div>
+          <div class="circuit-text">
+            <div class="circuit-name">KB deadlifts</div>
+            <div class="circuit-detail">x12 reps</div>
+          </div>
+        </li>
+        <li class="circuit-item">
+          <div class="circuit-num">2</div>
+          <div class="circuit-text">
+            <div class="circuit-name">Goblet squats</div>
+            <div class="circuit-detail">x12 reps</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- DAY 2 -->
+    <div id="d2" class="panel">
+      <span class="recovery-badge badge-hydro">+ hydromassage &mdash; 10 min</span>
+
+      <p class="section-label">Circuit &mdash; 30&ndash;32 min</p>
+      <p class="round-info">3 rounds &mdash; 40 sec on / 20 sec rest &mdash; 90 sec between rounds</p>
+
+      <ul class="circuit-list">
+        <li class="circuit-item">
+          <div class="circuit-num">1</div>
+          <div class="circuit-text">
+            <div class="circuit-name">KB swings</div>
+            <div class="circuit-detail">hinge at the hips, not a squat</div>
+          </div>
+          <div class="circuit-timer">40/20</div>
+        </li>
+        <li class="circuit-item">
+          <div class="circuit-num">2</div>
+          <div class="circuit-text">
+            <div class="circuit-name">Goblet squats</div>
+            <div class="circuit-detail">bodyweight or KB</div>
+          </div>
+          <div class="circuit-timer">40/20</div>
+        </li>
+        <li class="circuit-item">
+          <div class="circuit-num">3</div>
+          <div class="circuit-text">
+            <div class="circuit-name">Treadmill</div>
+            <div class="circuit-detail">2 min fast walk between rounds &mdash; not a rest</div>
+          </div>
+          <div class="circuit-timer">2 min</div>
+        </li>
+        <li class="circuit-item">
+          <div class="circuit-num">4</div>
+          <div class="circuit-text">
+            <div class="circuit-name">Push-ups</div>
+            <div class="circuit-detail">knees totally fine</div>
+          </div>
+          <div class="circuit-timer">40/20</div>
+        </li>
+        <li class="circuit-item">
+          <div class="circuit-num">5</div>
+          <div class="circuit-text">
+            <div class="circuit-name">KB deadlift</div>
+            <div class="circuit-detail">different from swings &mdash; slow and controlled</div>
+          </div>
+          <div class="circuit-timer">40/20</div>
+        </li>
+        <li class="circuit-item">
+          <div class="circuit-num">6</div>
+          <div class="circuit-text">
+            <div class="circuit-name">Plank hold</div>
+            <div class="circuit-detail">knees fine &mdash; hold steady, breathe</div>
+          </div>
+          <div class="circuit-timer">40/20</div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- DAY 3 -->
+    <div id="d3" class="panel">
+      <span class="recovery-badge badge-choice">+ sauna or hydromassage &mdash; your call</span>
+
+      <p class="section-label">Treadmill &mdash; 15 min steady</p>
+
+      <table class="treadmill-table">
+        <thead>
+          <tr>
+            <th>Duration</th>
+            <th>Speed</th>
+            <th>Incline</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>0 &ndash; 15 min</td><td>2.5&ndash;3.0</td><td>4&ndash;5%</td></tr>
+        </tbody>
+      </table>
+
+      <p class="note">Active recovery pace. Comfortable but not lazy. This is not a push day.</p>
+
+      <p class="section-label">Circuit &mdash; 20 min</p>
+      <p class="round-info">3 rounds &mdash; 40 sec on / 20 sec rest &mdash; 90 sec between rounds</p>
+
+      <ul class="circuit-list">
+        <li class="circuit-item">
+          <div class="circuit-num">1</div>
+          <div class="circuit-text">
+            <div class="circuit-name">Reverse lunges</div>
+            <div class="circuit-detail">bodyweight or KB &mdash; alternate legs</div>
+          </div>
+          <div class="circuit-timer">40/20</div>
+        </li>
+        <li class="circuit-item">
+          <div class="circuit-num">2</div>
+          <div class="circuit-text">
+            <div class="circuit-name">KB single-arm rows</div>
+            <div class="circuit-detail">use a bench for support</div>
+          </div>
+          <div class="circuit-timer">40/20</div>
+        </li>
+        <li class="circuit-item">
+          <div class="circuit-num">3</div>
+          <div class="circuit-text">
+            <div class="circuit-name">Glute bridges</div>
+            <div class="circuit-detail">bodyweight &mdash; high reps, squeeze at the top</div>
+          </div>
+          <div class="circuit-timer">40/20</div>
+        </li>
+        <li class="circuit-item">
+          <div class="circuit-num">4</div>
+          <div class="circuit-text">
+            <div class="circuit-name">KB shoulder press</div>
+            <div class="circuit-detail">standing or seated</div>
+          </div>
+          <div class="circuit-timer">40/20</div>
+        </li>
+        <li class="circuit-item">
+          <div class="circuit-num">5</div>
+          <div class="circuit-text">
+            <div class="circuit-name">Dead bugs</div>
+            <div class="circuit-detail">slow and controlled &mdash; core work, don't rush</div>
+          </div>
+          <div class="circuit-timer">40/20</div>
+        </li>
+      </ul>
+    </div>
+
+
+
+
+
+  </div>
+
+  <script>
+    function show(id, btn) {
+      document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      btn.classList.add('active');
+    }
+  </script>
+</body>
+</html>
