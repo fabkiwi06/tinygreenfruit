@@ -7,7 +7,9 @@
   <link rel="stylesheet" href="style.css" />
   <style>
     body {
-      padding: 4rem 3rem;
+      display: flex;
+      justify-content: center;
+      padding: 4rem 2rem;
       opacity: 0;
       animation: fadeIn 0.8s ease forwards;
     }
@@ -15,6 +17,14 @@
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(8px); }
       to { opacity: 1; transform: translateY(0); }
+    }
+
+    .page {
+      max-width: 860px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
     }
 
     header { margin-bottom: 3rem; }
@@ -51,7 +61,6 @@
 
     #map-container {
       width: 100%;
-      max-width: 900px;
       margin-top: 2.5rem;
     }
 
@@ -145,14 +154,20 @@
 </head>
 <body>
 
-  <header>
-    <a class="back-link" href="index.html">← tinygreenfruit</a>
-    <h1>states visited</h1>
-    <p class="year-label">2026</p>
-    <p class="count" id="count-label"></p>
-  </header>
+  <div class="page">
 
-  <div id="map-container"></div>
+    <header>
+      <a class="back-link" href="index.html">← tinygreenfruit</a>
+      <h1>states visited</h1>
+      <p class="year-label">2026</p>
+      <p class="count" id="count-label"></p>
+    </header>
+
+    <div id="map-container"></div>
+
+    <footer>hover over a state to learn more</footer>
+
+  </div>
 
   <div class="tooltip" id="tooltip">
     <div class="tooltip-state" id="tt-state"></div>
@@ -160,8 +175,6 @@
     <div class="tooltip-note" id="tt-note"></div>
     <div class="tooltip-date" id="tt-date"></div>
   </div>
-
-  <footer>hover over a state to learn more</footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
