@@ -367,6 +367,7 @@
 
   <script>
     const API = 'https://api.tinygreenfruit.com';
+    const FALLBACK_COVER = 'image/record.png';
 
     let currentRecord = null;
     let skippedThisSession = new Set();
@@ -414,9 +415,16 @@
 
       if (record.cover_url) {
         img.onload = () => img.classList.remove('loading');
-        img.onerror = () => { img.src = ''; };
+        img.onerror = () => {
+          img.src = FALLBACK_COVER;
+          img.classList.remove('loading');
+        };
         img.src = record.cover_url;
         img.alt = `${record.album} by ${record.artist}`;
+      } else {
+        img.src = FALLBACK_COVER;
+        img.alt = 'album cover not available';
+        img.classList.remove('loading');
       }
 
       document.getElementById('idleState').style.display = 'none';
