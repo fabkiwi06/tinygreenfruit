@@ -43,12 +43,12 @@
       line-height: 1.1;
     }
 
-    .year-label {
+    .subtitle {
       font-family: 'Courier Prime', monospace;
       font-size: 0.75rem;
       color: var(--muted);
       letter-spacing: 0.1em;
-      margin-top: 0.4rem;
+      margin-top: 0.5rem;
     }
 
     .count {
@@ -158,8 +158,8 @@
 
     <header>
       <a class="back-link" href="index.html">← tinygreenfruit</a>
-      <h1>states visited</h1>
-      <p class="year-label">2026</p>
+      <h1>kiwi was here</h1>
+      <p class="subtitle">in case i need an alibi</p>
       <p class="count" id="count-label"></p>
     </header>
 
@@ -216,7 +216,7 @@
 
     const count = Object.keys(visited).length;
     document.getElementById('count-label').textContent =
-      `${count} state${count !== 1 ? 's' : ''} visited`;
+      `${count} state${count !== 1 ? 's' : ''} visited in 2026`;
 
     const tooltip = document.getElementById('tooltip');
     const ttState = document.getElementById('tt-state');
