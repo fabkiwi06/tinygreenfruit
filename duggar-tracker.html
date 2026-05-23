@@ -244,7 +244,7 @@
 
     <div class="progress-section">
       <div class="progress-hero" id="progressHero">— episodes and counting</div>
-      <div class="progress-fraction" id="progressFraction">— / —<button class="lock-btn" id="lockBtn" onclick="handleLock()" title="admin">🔒</button></div>
+      <div class="progress-fraction" id="progressFraction"><span id="progressFractionText">— / —</span><button class="lock-btn" id="lockBtn" onclick="handleLock()" title="admin">🔒</button></div>
       <div class="progress-bar">
         <div class="progress-fill" id="progressFill" style="width: 0%"></div>
       </div>
@@ -292,7 +292,7 @@
     function renderProgress() {
       const pct = Math.round((currentEpisode / TOTAL) * 100);
       document.getElementById('progressHero').textContent = `${currentEpisode} episodes and counting`;
-      document.getElementById('progressFraction').textContent = `${currentEpisode} / ${TOTAL}`;
+      document.getElementById('progressFractionText').textContent = `${currentEpisode} / ${TOTAL}`;
       document.getElementById('progressFill').style.width = `${pct}%`;
     }
 
